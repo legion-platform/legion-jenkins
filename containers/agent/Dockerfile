@@ -23,7 +23,7 @@ RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 && \
 
 # Install Kops
 ENV KOPS_VERSION=1.10.0
-RUN wget https://github.com/kubernetes/kops/releases/download/${KOPS_VERSION}/kops-linux-amd64 -o /usr/local/bin/kops && \
+RUN wget https://github.com/kubernetes/kops/releases/download/${KOPS_VERSION}/kops-linux-amd64 -O /usr/local/bin/kops && \
     chmod a+x /usr/local/bin/kops
 
 # Install Helm

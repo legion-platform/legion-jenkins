@@ -47,8 +47,6 @@ spec:
       component: "{{ .Release.Name }}-jenkins"
   template:
     metadata:
-      annotations:
-        iam.amazonaws.com/role: "{{ .Values.clusterName }}-jenkins-role"
       labels:
         component: "{{ .Release.Name }}-jenkins"
     spec:
@@ -72,11 +70,6 @@ spec:
           value: "{{ .Release.Name }}-"
         - name: ENCLAVE_DEPLOYMENT_PREFIX
           value: "{{ .Values.enclaveDeploymentPrefix }}"
-        # Information for building corect images
-        - name: LEGION_PACKAGE_VERSION
-          value: "{{ .Values.package.version }}"
-        - name: LEGION_PACKAGE_REPOSITORY
-          value: "{{ .Values.package.repository }}"
         - name: LEGION_BASE_IMAGE_TAG
           value: "{{ .Values.package.baseImage.tag }}"
         - name: LEGION_BASE_IMAGE_REPOSITORY

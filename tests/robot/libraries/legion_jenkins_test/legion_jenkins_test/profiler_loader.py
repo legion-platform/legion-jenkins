@@ -20,8 +20,8 @@ Variables loader (from profiles/{env.PROFILE}.yml and /{env.CREDENTIAL_SECRETS}.
 import os
 
 import yaml
-from legion_airflow_test.robot import dex_client
-from legion_airflow_test.robot.dex_client import init_session_id, init_session_id_from_data
+from legion_jenkins_test.robot import dex_client
+from legion_jenkins_test.robot.dex_client import init_session_id, init_session_id_from_data
 
 PROFILE_ENVIRON_KEY = 'PROFILE'
 PATH_TO_PROFILES_DIR = 'PATH_TO_PROFILES_DIR'

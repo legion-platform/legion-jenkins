@@ -5,9 +5,8 @@ Library             String
 Library             OperatingSystem
 Library             Collections
 Library             DateTime
-Library             legion_airflow_test.robot.Utils
-Library             legion_airflow_test.robot.Airflow
-Library             legion_airflow_test.robot.Flower
+Library             legion_jenkins_test.robot.Utils
+Library             legion_jenkins_test.robot.Jenkins
 
 *** Keywords ***
 Connect to Jenkins endpoint

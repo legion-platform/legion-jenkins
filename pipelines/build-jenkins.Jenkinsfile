@@ -136,7 +136,7 @@ pipeline {
         stage("Build Jenkins Docker image") {
             steps {
                 script {
-                    legion.buildLegionImage('k8s-jenkins', "containers/jenkins", "Dockerfile", """--build-arg update_center_url="" --build-arg update_center_experimental_url="${env.param_jenkins_plugins_repository}" --build-arg update_center_download_url="${env.param_jenkins_plugins_repository}" --build-arg legion_plugin_version="${Globals.buildVersion}" """)
+                    legion.buildLegionImage('k8s-jenkins', "containers/jenkins", "Dockerfile", """ --build-arg update_center_experimental_url="${env.param_jenkins_plugins_repository}" --build-arg update_center_download_url="${env.param_jenkins_plugins_repository}" --build-arg legion_plugin_version="${Globals.buildVersion}" """)
                 }
             }
         }

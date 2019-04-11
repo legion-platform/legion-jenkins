@@ -12,8 +12,10 @@ def deployJenkins() {
                         --vault-password-file=${vault} \
                         --extra-vars "param_env_name=${param_env_name} \
                         legion_jenkins_version=${env.param_legion_jenkins_version} \
+                        legion_version=${env.param_legion_version} \
+                        pypi_repo=${env.param_pypi_repo} \
                         helm_repo=${env.param_helm_repo} \
-                        docker_repo=${env.param_docker_repo}}"
+                        docker_repo=${env.param_docker_repo}"
                         """
                     }
                 }

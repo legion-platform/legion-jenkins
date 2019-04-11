@@ -18,16 +18,20 @@ auth:
 package:
   version: "{{ legion_version }}"
   repository: "{{ pypi_repo }}"
-
   baseImage:
     repository: "{{ docker_repo }}/python-toolchain"
     tag: "{{ legion_version }}"
   edi_image: "{{ docker_repo }}/k8s-edi:{{ legion_version }}"
 
+metrics:
+  enabled: true
+  host: statsd-exporter.{{ monitoring_namespace }}.svc.cluster.local
+  port: 9125
+
 jenkins:
   enabled: true
   persistence:
-    storageClass:
+    storageClass: "gp2"
     size: {{ jenkins_volume_size | default('20') }}Gi
 
   image:
@@ -64,11 +68,6 @@ jenkins:
     {%- if item.role == "view" %} {{ item.name }}
     {%- endif -%}
     {% endfor %}"
-
-metrics:
-  enabled: true
-  host: statsd-exporter.{{ monitoring_namespace }}.svc.cluster.local
-  port: 9125
 
 connections:
   docker:

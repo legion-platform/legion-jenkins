@@ -34,12 +34,12 @@ RUN mkdir -p /etc/ansible/ && /bin/echo -e "[local]\nlocalhost ansible_connectio
 
 # Install Kops
 ENV KOPS_VERSION=1.10.0
-RUN wget https://github.com/kubernetes/kops/releases/download/${KOPS_VERSION}/kops-linux-amd64 -o /usr/local/bin/kops && \
+RUN wget https://github.com/kubernetes/kops/releases/download/${KOPS_VERSION}/kops-linux-amd64 -O /usr/local/bin/kops && \
     chmod a+x /usr/local/bin/kops
 
 # Install kubectl
 ENV KUBECTL_VERSION=v1.10.6
-RUN wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
+RUN wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl && \
     chmod a+x /usr/local/bin/kubectl
 
 # Install Helm

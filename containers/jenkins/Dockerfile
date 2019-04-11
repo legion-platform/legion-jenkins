@@ -17,8 +17,8 @@
 # Build Legion Jenkins plugin
 FROM maven:3.5.3-jdk-8 as builder
 
-ARG legion_plugin_version="latest"
-ENV JENKINS_PLUGIN_VERSION=$legion_plugin_version
+# ARG legion_plugin_version="latest"
+# ENV JENKINS_PLUGIN_VERSION=$legion_plugin_version
 
 # ENV JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre/"
@@ -26,7 +26,9 @@ ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre/"
 COPY legion-jenkins-plugin /src/legion-jenkins-plugin
 RUN ls /src/legion-jenkins-plugin
 
-RUN mvn -f /src/legion-jenkins-plugin/pom.xml versions:set -DnewVersion=${JENKINS_PLUGIN_VERSION} -Dmaven.repo.local=///tmp/.m2/repository
+# TODO: restore version
+# RUN mvn -f /src/legion-jenkins-plugin/pom.xml versions:set -DnewVersion=${JENKINS_PLUGIN_VERSION} -Dmaven.repo.local=///tmp/.m2/repository
+RUN mvn -f /src/legion-jenkins-plugin/pom.xml versions:set -Dmaven.repo.local=///tmp/.m2/repository
 RUN mvn -f /src/legion-jenkins-plugin/pom.xml install -Dmaven.repo.local=/tmp/.m2/repository
 
 # Build Jenkins image

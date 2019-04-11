@@ -11,7 +11,7 @@
 - name: Create GIT secret
   shell: kubectl --context {{ cluster_name }} create secret generic legion-git-deploy --from-file=id_rsa={{ tmp_dir }}/git.{{ cluster_name }}.deploy
 
-- name: Get legion chart status
+- name: Get legion jenkins chart status
   shell: helm --kube-context {{ cluster_name }} ls --all {{ release_name }}
   register: chart_status
 
@@ -26,7 +26,7 @@
 - name: Create legion configuration (values) file
   template:
     src: legion-jenkins-values.yaml.j2
-    dest: "{{ tmp_dir }}/legion-jenkins-values.{{ cluster_name }}.yaml"
+    dest: "{{ values_file }}"
     mode: 0777
 
 - name: Pre run with dumping
@@ -35,6 +35,11 @@
 
 - name: Install legion-jenkins chart
   shell: "helm --kube-context {{ cluster_name }} install legion-helm/legion-jenkins --name {{ release_name }} --version={{ legion_jenkins_version }} --namespace {{ namespace }} --wait --timeout 600 -f  {{ values_file }}"
+
+# - name: install
+#   shell: helm --kube-context {{ cluster_name }} install legion-jenkins --name legion-jenkins --wait --timeout 600 -f {{ values_file }}
+#   args:
+#     chdir: ../helms
 
 - name: Label default namespace with legion-component=jenkins
   shell: kubectl --context {{ cluster_name }} label ns default legion-component=jenkins --overwrite

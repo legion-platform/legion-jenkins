@@ -22,7 +22,7 @@ import sys
 import logging
 import contextlib
 
-import legion_airflow_test.robot.framework_extensions
+import legion_jenkins_test.robot.framework_extensions
 
 
 ROBOT_LISTENER_API_VERSION = 3
@@ -108,7 +108,7 @@ def end_test(test, result):  # pylint: disable=W0613
     :return: None
     """
     if not result.passed:
-        process_lib = legion_airflow_test.robot.framework_extensions.get_imported_library_instance('Process')
+        process_lib = legion_jenkins_test.robot.framework_extensions.get_imported_library_instance('Process')
         if process_lib:
             all_processes = process_lib._processes._connections
             all_results = process_lib._results

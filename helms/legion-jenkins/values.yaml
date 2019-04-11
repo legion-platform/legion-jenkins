@@ -14,6 +14,7 @@ metrics:
   port: 9125
 
 jenkins:
+
   enabled: true
   image:
     repository: "legion/k8s-jenkins"
@@ -33,7 +34,7 @@ jenkins:
   git_secret_name: false
 
   persistence:
-    storageClass: ""
+    storageClass: "gp2"
     size: 20Gi
 
   openId:

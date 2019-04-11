@@ -5,13 +5,11 @@ pipeline {
         //Input parameters
         param_git_branch = "${params.GitBranch}"
         param_profile = "${params.Profile}"
-        param_legion_jenkins_version = "${params.LegionJenkinsVersion}"
         //Legion Infra repo url (for pipeline methods import)
         param_legion_infra_repo = "${params.LegionInfraRepo}"
         //Legion repo version tag (tag or branch name)
         param_legion_infra_version = "${params.LegionInfraVersion}"
-        //Legion eclave name where to deploy Jenkins
-        param_enclave_name = "${params.Enclave}"
+        param_legion_jenkins_version = "${params.LegionJenkinsVersion}"
         param_docker_repo = "${params.DockerRepo}"
         param_debug_run = "${params.DebugRun}"
         //Job parameters
@@ -19,8 +17,7 @@ pipeline {
         legionSharedLibPath = "pipelines/legionPipeline.groovy"
         cleanupContainerVersion = "latest"
         ansibleHome =  "/opt/legion/ansible"
-        ansibleVerbose = '-v'
-        //Alternative profiles path with legion cluster parameters
+        ansibleVerbose = '-v'        //Alternative profiles path with legion cluster parameters
         PROFILES_PATH = "${WORKSPACE}/legion/profiles"
     }
 

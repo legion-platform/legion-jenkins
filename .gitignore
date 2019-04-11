@@ -19,6 +19,8 @@ cover/
 .DS_Store
 *.whl
 
+*.retry
+
 legion-activate.sh
 legion/legion/data/Pipfile.lock
 

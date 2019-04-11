@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Check if airflow components are secured
+Documentation       Check if jenkins components are secured
 Resource            ../resources/keywords.robot
 Variables           ../load_variables_from_profiles.py    ${PATH_TO_PROFILES_DIR}
 Library             Collections

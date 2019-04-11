@@ -7,7 +7,7 @@ pipeline {
         param_profile = "${params.Profile}"
         param_legion_infra_repo = "${params.LegionInfraRepo}"
         param_legion_infra_version = "${params.LegionInfraVersion}"
-        param_legion_version = "${params.LegionVersion}"
+        param_legion_jenkins_version = "${params.LegionJenkinsVersion}"
         param_build_legion_jenkins_job_name = "${params.BuildLegionJenkinsJobName}"
         param_terminate_cluster_job_name = "${params.TerminateClusterJobName}"
         param_create_cluster_job_name = "${params.CreateClusterJobName}"
@@ -126,7 +126,7 @@ pipeline {
                            [$class: 'GitParameterValue', name: 'GitBranch', value: env.param_legion_infra_version],
                            string(name: 'Profile', value: env.param_profile),
                            string(name: 'LegionInfraVersion', value: env.param_legion_infra_version),
-                           string(name: 'LegionVersion', value: env.param_legion_version),
+                           string(name: 'LegionJenkinsVersion', value: env.param_legion_jenkins_version),
                            string(name: 'TestsTags', value: ""),
                            string(name: 'commitID', value: "env.param_legion_release_commit_id"),
                            booleanParam(name: 'DeployLegion', value: true),
