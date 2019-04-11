@@ -27,8 +27,7 @@ package:
 jenkins:
   enabled: true
   persistence:
-    storageClass: {% if persistent_jenkins_volume %}"jenkins-volume"{% else %}""{% endif %}
-
+    storageClass:
     size: {{ jenkins_volume_size | default('20') }}Gi
 
   image:

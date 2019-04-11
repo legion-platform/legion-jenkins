@@ -19,6 +19,5 @@ secrets_file: "/tmp/{{ cluster_name }}-secrets"
 
 # Legion
 model_docker_url: nexus-local.cc.epm.kharlamov.biz:8084
-persistent_jenkins_volume: true
 docker_repo: "nexus-local.cc.epm.kharlamov.biz:443/legion"
 storageclass: efs
