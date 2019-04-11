@@ -2,3 +2,4 @@
 !ansible/**
 !containers/**
 !scripts/**
+!tests/**

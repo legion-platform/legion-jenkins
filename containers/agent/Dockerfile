@@ -41,12 +41,8 @@ ENV LC_ALL="en_US.UTF-8" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8"
 
-# COPY legion_airflow/Pipfile legion_airflow/Pipfile.lock /tmp/
-# RUN pip3 install --disable-pip-version-check --upgrade pip==9.0.3 pipenv==2018.10.13 && \
-#     cd /tmp/ && pipenv install --system --dev
-
-# # Install legion_airflow_test package
-# COPY tests/robot/libraries/legion_airflow_test/ /opt
-# RUN cd /opt/ && python3 setup.py install && rm -rf /opt/legion_airflow_test
+# Install legion_jenkins_test package
+COPY tests/robot/libraries/legion_jenkins_test /opt
+RUN cd /opt/ && python3 setup.py install && rm -rf /opt/legion_jenkins_test
 
 WORKDIR /opt

@@ -1,12 +1,12 @@
 ---
 ##################
-# Install Legion 
+# Install Legion Jenkins
 ##################
 
 # NOTICE:
 # You Must specify the next variables as extra vars (--extra-vars "XXXX=YYYY") 
 # profile - unique cluster name
-# legion_version - Legion version to deploy
+# legion_jenkins_version - Legion jenkins version to deploy
 # Optional arguments:
 # pypi_repo - rewrite pypi repo endpoint
 # docker_repo - rewrite docker registry endpoint

@@ -62,7 +62,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Ariflow') {
+        stage('Deploy Jenkins') {
             when {
                 expression {return param_deploy_jenkins == "true" }
             }

@@ -13,8 +13,7 @@ def deployJenkins() {
                         --extra-vars "param_env_name=${param_env_name} \
                         legion_jenkins_version=${env.param_legion_jenkins_version} \
                         helm_repo=${env.param_helm_repo} \
-                        docker_repo=${env.param_docker_repo} \
-                        enclave=${env.param_enclave_name}"
+                        docker_repo=${env.param_docker_repo}}"
                         """
                     }
                 }
