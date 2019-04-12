@@ -36,10 +36,5 @@
 - name: Install legion-jenkins chart
   shell: "helm --kube-context {{ cluster_name }} install legion-helm/legion-jenkins --name {{ release_name }} --version={{ legion_jenkins_version }} --namespace {{ namespace }} --wait --timeout 600 -f  {{ values_file }}"
 
-# - name: install
-#   shell: helm --kube-context {{ cluster_name }} install legion-jenkins --name legion-jenkins --wait --timeout 600 -f {{ values_file }}
-#   args:
-#     chdir: ../helms
-
 - name: Label default namespace with legion-component=jenkins
   shell: kubectl --context {{ cluster_name }} label ns default legion-component=jenkins --overwrite

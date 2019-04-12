@@ -17,18 +17,15 @@
 # Build Legion Jenkins plugin
 FROM maven:3.5.3-jdk-8 as builder
 
-# ARG legion_plugin_version="latest"
-# ENV JENKINS_PLUGIN_VERSION=$legion_plugin_version
+ARG legion_plugin_version="latest"
+ENV JENKINS_PLUGIN_VERSION=$legion_plugin_version
 
 # ENV JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre/"
 
 COPY legion-jenkins-plugin /src/legion-jenkins-plugin
-RUN ls /src/legion-jenkins-plugin
 
-# TODO: restore version
-# RUN mvn -f /src/legion-jenkins-plugin/pom.xml versions:set -DnewVersion=${JENKINS_PLUGIN_VERSION} -Dmaven.repo.local=///tmp/.m2/repository
-RUN mvn -f /src/legion-jenkins-plugin/pom.xml versions:set -Dmaven.repo.local=///tmp/.m2/repository
+RUN mvn -f /src/legion-jenkins-plugin/pom.xml versions:set -DnewVersion=${JENKINS_PLUGIN_VERSION} -Dmaven.repo.local=///tmp/.m2/repository
 RUN mvn -f /src/legion-jenkins-plugin/pom.xml install -Dmaven.repo.local=/tmp/.m2/repository
 
 # Build Jenkins image
@@ -49,14 +46,14 @@ RUN add-apt-repository \
 RUN apt-get update && apt-get install --yes docker-ce
 
 # Copy bootstrap scripts
-COPY scripts/security.groovy /usr/share/jenkins/ref/init.groovy.d/security.groovy
-COPY scripts/create_jobs.groovy /usr/share/jenkins/ref/init.groovy.d/create_jobs.groovy
+COPY containers/jenkins/scripts/security.groovy /usr/share/jenkins/ref/init.groovy.d/security.groovy
+COPY containers/jenkins/scripts/create_jobs.groovy /usr/share/jenkins/ref/init.groovy.d/create_jobs.groovy
 
 # Copy plugins installation script & set run mode
-COPY scripts/install-plugins.sh /usr/local/bin/install-plugins.sh
+COPY containers/jenkins/scripts/install-plugins.sh /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh
 
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+COPY containers/jenkins/plugins.txt /usr/share/jenkins/ref/plugins.txt
 
 # Prepare env variables from build arguments
 ARG update_center_url="https://updates.jenkins.io"

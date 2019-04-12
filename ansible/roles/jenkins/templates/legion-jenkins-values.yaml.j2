@@ -42,7 +42,7 @@ jenkins:
 
   ingress:
     tls:
-      enabled: {% if use_https == "yes" %}true{% else %}false{% endif %}
+      enabled: true
 
   openId:
     enable: {{ dex.enabled | default(false) | bool }}
