@@ -11,7 +11,7 @@ Checking Jenkins domain has been registered
     Check domain exists  jenkins.${HOST_BASE_DOMAIN}
 
 Check if Jenkins domain has been secured
-    [Template]    Check if jenkins domain has been secured
+    [Template]    Check if component domain has been secured
     component=jenkins    enclave=${EMPTY}
 
 Check if Jenkins domain does not auth with invalid creds
@@ -24,4 +24,4 @@ Check if Jenkins domain can auth with valid creds
 
 Checking if all replica sets, stateful sets, deployments are up and running
     [Documentation]  Gather information from kubernetes through API and check state of all required componens
-    Deployment is running        ${DEPLOYMENT}-core-jenkins   namespace=default
+    Deployment is running        ${DEPLOYMENT}-legion-jenkins   namespace=default
