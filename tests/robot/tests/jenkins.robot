@@ -4,6 +4,8 @@ Resource            ../resources/keywords.robot
 Variables           ../load_variables_from_profiles.py    ${PATH_TO_PROFILES_DIR}
 Library             Collections
 Library             legion_jenkins_test.robot.Utils
+Suite Setup         Run Keywords
+...                 Choose cluster context                    ${CLUSTER_NAME}
  
 *** Test Cases ***
 Checking Jenkins domain has been registered

@@ -24,11 +24,6 @@ import kubernetes.config
 import kubernetes.config.config_exception
 import urllib3
 
-from legion.services.k8s import utils as k8s_utils
-
-from legion.robot.utils import wait_until
-
-
 class K8s:
     """
     Kubernetes dashboard client for robot tests
@@ -68,7 +63,6 @@ class K8s:
         :return: None
         """
         self._context = context
-        k8s_utils.CONNECTION_CONTEXT = context
 
     def service_is_running(self, service_name, namespace=None):
         """
@@ -293,3 +287,25 @@ class K8s:
                 print('Current node count {}, but not as expected {}. Sleep {} seconds and try again'
                       .format(nodes_num, expected_count, sleep))
                 time.sleep(sleep)
+
+
+    def wait_until(condition, iteration_duration=5, iterations=10):
+        """
+        Wait until condition would be true
+
+        :param condition: callable condition that returns bool value
+        :type condition: Callable
+        :param iteration_duration: duration between checks in seconds
+        :type iteration_duration: int
+        :param iterations: maximum count of iterations
+        :type iterations: int
+        :return: object or False -- result or False
+        """
+        for _ in range(iterations):
+            result = condition()
+            if result:
+                return result
+
+            time.sleep(iteration_duration)
+
+        return False
