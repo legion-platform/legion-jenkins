@@ -17,7 +17,6 @@
 # Build Legion Jenkins plugin
 FROM maven:3.5.3-jdk-8 as builder
 
-ARG legion_plugin_version="latest"
 ENV JENKINS_PLUGIN_VERSION=$legion_plugin_version
 
 # ENV JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"

@@ -38,3 +38,10 @@
 
 - name: Label default namespace with legion-component=jenkins
   shell: kubectl --context {{ cluster_name }} label ns default legion-component=jenkins --overwrite
+
+- name: Wait for Jenkins ready
+  shell: "sleep 60 && kubectl --context {{ cluster_name }} get endpoints {{ release_name }}-jenkins --namespace {{ namespace }}"
+  register: jenkins_status_after_install
+  until: jenkins_status_after_install.rc == 0
+  retries: 20
+  delay: 10
