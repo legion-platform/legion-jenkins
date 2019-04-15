@@ -4,9 +4,7 @@ Resource            ../resources/keywords.robot
 Variables           ../load_variables_from_profiles.py    ${PATH_TO_PROFILES_DIR}
 Library             Collections
 Library             legion_jenkins_test.robot.Utils
-Suite Setup         Run Keywords
-...                 Choose cluster context                    ${CLUSTER_NAME}
- 
+
 *** Test Cases ***
 Checking Jenkins domain has been registered
     [Documentation]  Check that Jenkin DNS A record has been registered
@@ -23,7 +21,3 @@ Check if Jenkins domain does not auth with invalid creds
 Check if Jenkins domain can auth with valid creds
     [Template]    Secured component domain should be accessible by valid credentials
     component=jenkins    enclave=${EMPTY}
-
-Checking if all replica sets, stateful sets, deployments are up and running
-    [Documentation]  Gather information from kubernetes through API and check state of all required componens
-    Deployment is running        ${DEPLOYMENT}-legion-jenkins   namespace=default
