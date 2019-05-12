@@ -55,7 +55,5 @@ setup(name='legion_jenkins_test',
       license='Apache v2',
       packages=['legion_jenkins_test'],
       include_package_data=True,
-      install_requires=extract_requirements(os.path.join(PACKAGE_ROOT_PATH, 'requirements', 'base.txt')),
       test_suite='nose.collector',
-      tests_require=extract_requirements(os.path.join(PACKAGE_ROOT_PATH, 'requirements', 'test.txt')),
       zip_safe=False)

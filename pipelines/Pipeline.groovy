@@ -59,14 +59,14 @@ def runRobotTests() {
                         dir("${WORKSPACE}"){
                             def nose_report = 0
                             def robot_report = 0
-                            sh "./tests/robot/run_robot_tests.sh ${env.param_profile} ${env.param_legion_jenkins_version}"
+                            sh "./tests/run_robot_tests.sh ${env.param_profile} ${env.param_legion_jenkins_version}"
 
-                            robot_report = sh(script: 'find tests/robot/ -name "*.xml" | wc -l', returnStdout: true)
+                            robot_report = sh(script: 'find tests/ -name "*.xml" | wc -l', returnStdout: true)
 
                             if (robot_report.toInteger() > 0) {
                                 step([
                                     $class : 'RobotPublisher',
-                                    outputPath : 'tests/robot/',
+                                    outputPath : 'tests/',
                                     outputFileName : "*.xml",
                                     disableArchiveOutput : false,
                                     passThreshold : 100,

@@ -42,7 +42,7 @@ ENV LC_ALL="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8"
 
 # Install legion_jenkins_test package
-COPY tests/robot/libraries/legion_jenkins_test /opt
+COPY tests/libraries/legion_jenkins_test /opt
 RUN cd /opt/ && python3 setup.py install && rm -rf /opt/legion_jenkins_test
 
 WORKDIR /opt

@@ -19,7 +19,6 @@ FROM maven:3.5.3-jdk-8 as builder
 
 ENV JENKINS_PLUGIN_VERSION=$legion_plugin_version
 
-# ENV JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre/"
 
 COPY legion-jenkins-plugin /src/legion-jenkins-plugin

@@ -76,8 +76,8 @@ def pod(Map podParams=null, Closure body) {
 
     model_image = podParams.get('image', getDefaultImageName())
     builder_image = "${System.getenv('LEGION_EDI_IMAGE')}"
-    cpu = podParams.get('cpu', '330m')
-    ram = podParams.get('ram', '4Gi')
+    cpu = podParams.get('cpu', '250m')
+    ram = podParams.get('ram', '256Mi')
     iamRole = podParams.get('iamRole', "${System.getenv('CLUSTER_NAME')}-${params.Enclave}-jslave-role")
     annotations << podAnnotation(key: 'iam.amazonaws.com/role', value: iamRole)
 
@@ -97,59 +97,24 @@ def pod(Map podParams=null, Closure body) {
 
     label = "jenkins-build-${UUID.randomUUID().toString()}"
 
-    def tolerations = """
-spec:
-  containers:
-  - name: builder
-    env:
-    - name: POD_NAME
-      valueFrom:
-        fieldRef:
-          fieldPath: metadata.name
-    volumeMounts:
-    - mountPath: "/var/run/docker.sock"
-      name: docker-socket
-  volumes:
-  - name: docker-socket
-    hostPath:
-      path: "/var/run/docker.sock"
-  tolerations:
-  - key: "dedicated"
-    operator: "Equal"
-    value: "jenkins-slave"
-    effect: "NoSchedule"
-"""
-
     podTemplate(
-            label: label, yaml: tolerations,
+            label: label,
             namespace: "${params.Enclave}",
             annotations: annotations,
             containers: [
                     containerTemplate(
-                            name: 'model',
+                            name: 'slave',
                             image: model_image,
                             resourceLimitMemory: ram,
                             resourceLimitCpu: cpu,
                             ttyEnabled: true,
                             command: 'cat',
                             envVars: envVars
-                    ),
-                    containerTemplate(
-                            name: 'builder',
-                            image: builder_image,
-                            resourceLimitMemory: '100Mi',
-                            resourceLimitCpu: '100m',
-                            ttyEnabled: true,
-                            command: '/usr/local/bin/uwsgi',
-                            serviceAccount: 'jenkins',
-                            args: '--strict --ini /etc/uwsgi/model_builder_uwsgi.ini',
-                            envVars: envVars
                     )
-            ],
-            serviceAccount: "model-builder"
+            ]
     ) {
         node(label){
-            container('model', body)
+            container('slave', body)
         }
     }
 }
