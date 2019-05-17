@@ -1,0 +1,94 @@
+pipeline {
+    agent { label 'ec2orchestrator'}
+
+    environment {
+        //Input parameters
+        param_git_branch = "${params.GitBranch}"
+        param_profile = "${params.Profile}"
+        //Legion Infra repo url (for pipeline methods import)
+        param_legion_infra_repo = "${params.LegionInfraRepo}"
+        //Legion repo version tag (tag or branch name)
+        param_legion_infra_version = "${params.LegionInfraVersion}"
+        param_legion_jenkins_version = "${params.LegionJenkinsVersion}"
+        param_docker_repo = "${params.DockerRepo}"
+        param_debug_run = "${params.DebugRun}"
+        //Job parameters
+        sharedLibPath = "pipelines/Pipeline.groovy"
+        legionSharedLibPath = "pipelines/legionPipeline.groovy"
+        cleanupContainerVersion = "latest"
+        ansibleHome =  "/opt/legion/ansible"
+        ansibleVerbose = '-v'        //Alternative profiles path with legion cluster parameters
+        PROFILES_PATH = "${WORKSPACE}/legion/profiles"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                cleanWs()
+                checkout scm
+                script {
+                    sh 'echo RunningOn: $(curl http://checkip.amazonaws.com/)'
+
+                    param_env_name = env.param_profile.split("\\.")[0]
+
+                    // Import legion-jenkins components
+                    legionJenkins = load "${env.sharedLibPath}"
+                    
+                    // import Legion components
+                    dir("${WORKSPACE}/legion") {
+                        checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: "${env.param_legion_infra_repo}"]], branches: [[name: "refs/tags/${env.param_legion_infra_version}"]]], poll: false 
+                        legion = load "${env.legionSharedLibPath}"
+                    }
+                    
+                    //Generate build description
+                    legion.buildDescription()
+                }
+            }
+        }
+
+        /// Whitelist Jenkins Agent IP on cluster
+        stage('Authorize Jenkins Agent') {
+            steps {
+                script {
+                    legion.authorizeJenkinsAgent()
+                }
+            }
+        }
+
+        stage('Uneploy Jenkins') {
+            steps {
+                script {
+                    legion.ansibleDebugRunCheck(env.param_debug_run)
+                    legionJenkins.undeployJenkins()
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                dir("${WORKSPACE}/legion") {
+                    // import Legion components
+                    checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: "${env.param_legion_infra_repo}"]], branches: [[name: "refs/tags/${env.param_legion_infra_version}"]]], poll: false
+                    legion = load "${env.legionSharedLibPath}"
+                    legion.notifyBuild(currentBuild.currentResult)
+                }
+            }
+        }
+        cleanup {
+            script {
+                dir("${WORKSPACE}/legion") {
+                    // import Legion components
+                    checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: "${env.param_legion_infra_repo}"]], branches: [[name: "refs/tags/${env.param_legion_infra_version}"]]], poll: false
+                    legion = load "${env.legionSharedLibPath}"
+                    // reset ansible home to defaults
+                    ansibleHome = env.ansibleHome
+                    legion.cleanupClusterSg(env.param_legion_infra_version ?: cleanupContainerVersion)
+                }
+            }
+            deleteDir()
+        }
+    }
+
+}

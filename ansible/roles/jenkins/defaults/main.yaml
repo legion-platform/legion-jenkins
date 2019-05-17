@@ -1,0 +1,6 @@
+---
+git_secret_name: legion-git-deploy
+release_name: "legion-jenkins"
+values_file: "{{ tmp_dir }}/legion-values.{{ cluster_name }}.yaml"
+namespace: "default"
+chart_version: "777"

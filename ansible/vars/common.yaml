@@ -1,0 +1,32 @@
+---
+# Cluster
+vendor: legion
+route53_zone: epm.kharlamov.biz
+aws_region: us-east-2
+env_name: "{{ param_env_name }}"
+base_domain: "{{ env_name }}.{{ route53_zone }}"
+cluster_name: "{{ env_name }}.{{ route53_zone }}"
+profile: "{{ env_name }}.{{ route53_zone }}"
+state_store: s3://legion-cluster
+tmp_dir: /tmp/
+
+# AWS
+aws_region: us-east-2
+vpc_id: vpc-5729c13e
+
+# Dex
+dex:
+  enabled: true
+
+# Secrets
+secrets_bucket: "legion-cluster"
+secrets_file: "/tmp/{{ cluster_name }}-secrets"
+
+# Legion
+model_docker_url: nexus-local.cc.epm.kharlamov.biz:8084
+docker_repo: "nexus-local.cc.epm.kharlamov.biz:443/legion"
+use_https: yes
+use_https_for_tests: yes
+
+# Clusterwide parameters
+monitoring_namespace: kube-monitoring

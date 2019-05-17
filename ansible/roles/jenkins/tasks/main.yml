@@ -1,0 +1,47 @@
+---
+
+- name: Copy git deploy key to host
+  copy:
+    content: "{{ jenkins.git_key | b64decode }}"
+    dest: "{{ tmp_dir }}/git.{{ cluster_name }}.deploy"
+
+- name: Remove old GIT secret
+  shell: kubectl --context {{ cluster_name }} delete secret legion-git-deploy --ignore-not-found=true
+
+- name: Create GIT secret
+  shell: kubectl --context {{ cluster_name }} create secret generic legion-git-deploy --from-file=id_rsa={{ tmp_dir }}/git.{{ cluster_name }}.deploy
+
+- name: Get legion jenkins chart status
+  shell: helm --kube-context {{ cluster_name }} ls --all {{ release_name }}
+  register: chart_status
+
+- name: Remove legion-jenkins chart
+  shell: helm --kube-context {{ cluster_name }} delete --purge {{ release_name }}
+  when: chart_status.stdout_lines|length > 1
+
+- name: WORKAROUND delete pods in phase terminating
+  shell: kubectl --context {{ cluster_name }} --namespace {{ namespace }} delete --grace-period=0 --force po $(kubectl --context {{ cluster_name }} --namespace {{ namespace }} get po -o wide | grep Terminating | awk '{ print $1 }') || true
+  when: chart_status.stdout_lines|length > 1
+
+- name: Create legion configuration (values) file
+  template:
+    src: legion-jenkins-values.yaml.j2
+    dest: "{{ values_file }}"
+    mode: 0777
+
+- name: Pre run with dumping
+  shell: helm --kube-context {{ cluster_name }} install legion-helm/legion-jenkins --name {{ release_name }} --version={{ legion_jenkins_version }} --namespace {{ namespace }} --debug --dry-run -f  {{ values_file }}
+  register: helm_legion_install_output
+
+- name: Install legion-jenkins chart
+  shell: "helm --kube-context {{ cluster_name }} install legion-helm/legion-jenkins --name {{ release_name }} --version={{ legion_jenkins_version }} --namespace {{ namespace }} --wait --timeout 600 -f  {{ values_file }}"
+
+- name: Label default namespace with legion-component=jenkins
+  shell: kubectl --context {{ cluster_name }} label ns default legion-component=jenkins --overwrite
+
+- name: Wait for Jenkins ready
+  shell: "sleep 60 && kubectl --context {{ cluster_name }} get endpoints {{ release_name }}-jenkins --namespace {{ namespace }}"
+  register: jenkins_status_after_install
+  until: jenkins_status_after_install.rc == 0
+  retries: 20
+  delay: 10

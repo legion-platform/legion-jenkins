@@ -1,0 +1,43 @@
+---
+##################
+# Install Legion Enclave
+##################
+
+# NOTICE:
+# You Must specify the next variables as extra vars (--extra-vars "XXXX=YYYY") 
+# profile - unique cluster name
+
+- hosts: localhost
+  connection: local
+  gather_facts: True
+  vars_files:
+    - vars/common.yaml
+
+  pre_tasks:
+    - name: Download secrets from S3
+      aws_s3:
+        bucket: "{{ secrets_bucket }}"
+        object: "vault/{{ profile }}"
+        dest: "{{ secrets_file }}"
+        mode: get
+
+    - name: Include vars
+      include_vars:
+        file: "{{ secrets_file }}"
+
+  post_tasks:
+    - name: Delete secrets file
+      file:
+        name: "{{ secrets_file }}"
+        state: absent
+
+  tasks:
+  - name: Configure kubectl using kops
+    shell: "kops export kubecfg --name {{ cluster_name }} --state {{ state_store }}"
+  
+  - name: Remove legion jenkins chart
+    shell: helm --kube-context {{ cluster_name }} delete --purge legion-jenkins
+    ignore_errors: true
+  
+  - name: WORKAROUND delete pods in phase terminating
+    shell: kubectl --context {{ cluster_name }} --namespace default  delete --grace-period=0 --force po $(kubectl --context {{ cluster_name }} --namespace default get po -o wide | grep Terminating | awk '{ print $1 }') || true
